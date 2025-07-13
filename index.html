@@ -20,9 +20,11 @@
       background-color: #00008A;
       padding: 10px;
       border-bottom: 2px solid #FFFFFF;
+      display: flex;
+      gap: 10px;
     }
 
-    #restoreButton {
+    .toolbar-button {
       background-color: white;
       color: #0000AA;
       font-family: "Lucida Console", monospace;
@@ -32,7 +34,7 @@
       cursor: pointer;
     }
 
-    #restoreButton:hover {
+    .toolbar-button:hover {
       background-color: #DDDDDD;
     }
 
@@ -68,16 +70,18 @@
 </head>
 <body>
   <div id="toolbar">
-    <button id="restoreButton">Restore BSOD Text</button>
+    <button id="restoreButton" class="toolbar-button">Restore BSOD Text</button>
+    <button id="downloadButton" class="toolbar-button">Download as .txt</button>
   </div>
   <div id="notepad" contenteditable="true"></div>
 
   <script>
     const notepad = document.getElementById('notepad');
     const restoreButton = document.getElementById('restoreButton');
+    const downloadButton = document.getElementById('downloadButton');
     const storageKey = 'bsodNotepadText';
 
-    const defaultText = ` By Pixelcord.gear A problem has been detected and Windows has been shut down to prevent damage
+    const defaultText = `Made by Pixelcord.gear A problem has been detected and Windows has been shut down to prevent damage
 to your computer.
 
 If this is the first time you've seen this Stop error screen,
@@ -130,10 +134,21 @@ Technical information:
       localStorage.setItem(storageKey, defaultText);
       clearedThisSession = false;
     });
+
+    downloadButton.addEventListener('click', () => {
+      const textToSave = notepad.innerText;
+      const blob = new Blob([textToSave], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bsod-notepad.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
   </script>
 </body>
 </html>
-
-
 
 
